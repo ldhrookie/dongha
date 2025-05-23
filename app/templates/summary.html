@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>공부 로그 요약</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>공부 로그 요약</h1>
+        <nav>
+            <a href="{{ url_for('main.index') }}">홈</a>
+            <a href="{{ url_for('main.heatmap') }}">히트맵</a>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <h2>과목별 총 공부 시간</h2>
+            <ul>
+                {% for subject, hours in subject_summary.items() %}
+                    <li>{{ subject }}: {{ hours }} 시간</li>
+                {% endfor %}
+            </ul>
+        </section>
+        <section>
+            <h2>과목별 집중도 통계</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>과목</th>
+                        <th>평균 집중도</th>
+                        <th>변동성</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for subject, stats in focus_stats.items() %}
+                        <tr>
+                            <td>{{ subject }}</td>
+                            <td>{{ stats['평균집중도'] }}</td>
+                            <td>{{ stats['변동성'] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+        <section>
+            <h2>최근 피드백</h2>
+            <ul>
+                {% for feedback in recent_feedback %}
+                    <li>{{ feedback }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 공부 로그 분석기</p>
+    </footer>
+</body>
+</html>
