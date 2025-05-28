@@ -5,35 +5,117 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>공부 로그 분석</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">공부 로그 분석</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/summary">요약</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/heatmap">히트맵</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
     <div class="container">
         <h1 class="mt-5">공부 로그 분석</h1>
         <p class="lead">여기에서 당신의 공부 로그를 분석하고 피드백을 받을 수 있습니다.</p>
         
         <h2 class="mt-4">과목별 총 공부 시간</h2>
         <div id="subject-summary">
-            <!-- 과목별 총 공부 시간 데이터가 여기에 표시됩니다. -->
+            {% if subject_summary %}
+                <ul>
+                {% for subject, hours in subject_summary.items() %}
+                    <li>{{ subject }}: {{ hours|round(2) }} 시간</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>데이터가 없습니다.</p>
+            {% endif %}
         </div>
 
         <h2 class="mt-4">날짜별 공부 시간 트렌드</h2>
         <div id="daily-trend">
-            <!-- 날짜별 공부 시간 트렌드 그래프가 여기에 표시됩니다. -->
+            {% if daily_trend and daily_trend|length > 0 %}
+                <ul>
+                {% for date, hours in daily_trend.items() %}
+                    <li>{{ date }}: {{ hours|round(2) }} 시간</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>데이터가 없습니다.</p>
+            {% endif %}
         </div>
 
         <h2 class="mt-4">과목별 집중도 통계</h2>
         <div id="focus-stats">
-            <!-- 과목별 집중도 통계 데이터가 여기에 표시됩니다. -->
+            {% if focus_stats %}
+                <table class="table table-bordered bg-white">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>과목</th>
+                            <th>평균 집중도</th>
+                            <th>변동성</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for subject, stats in focus_stats.items() %}
+                        <tr>
+                            <td>{{ subject }}</td>
+                            <td>{{ stats['평균집중도']|round(2) }}</td>
+                            <td>{{ stats['변동성']|round(2) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>데이터가 없습니다.</p>
+            {% endif %}
         </div>
 
         <h2 class="mt-4">피드백</h2>
         <div id="feedback">
-            <!-- 피드백 데이터가 여기에 표시됩니다. -->
+            {% if recent_feedback %}
+                <ul>
+                {% for feedback in recent_feedback %}
+                    <li>{{ feedback }}</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>데이터가 없습니다.</p>
+            {% endif %}
         </div>
 
         <h2 class="mt-4">요일별 과목별 공부량 히트맵</h2>
         <div id="heatmap">
-            <!-- 히트맵 이미지가 여기에 표시됩니다. -->
+            {% if heatmap_data %}
+                <table class="table table-bordered bg-white">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>과목</th>
+                            {% for day in heatmap_days %}
+                                <th>{{ day }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in heatmap_data %}
+                        <tr>
+                            <td>{{ row.subject }}</td>
+                            {% for value in row['values'] %}
+                                <td>{{ value|round(2) }}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>데이터가 없습니다.</p>
+            {% endif %}
         </div>
     </div>
 
