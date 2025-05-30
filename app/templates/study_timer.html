@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>공부 타이머</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-4">
+    <a href="{{ url_for('main.index') }}" class="btn btn-secondary mb-3">홈으로</a>
+    <h2>공부 타이머</h2>
+    {% if running_log %}
+        <form method="post">
+            <p class="mt-2">시작 시각: {{ running_log.start_time.astimezone().strftime('%Y-%m-%d %H:%M:%S') }}</p>
+            <p class="mt-2">
+                경과 시간: <span id="elapsed"></span>
+            </p>
+            <div class="form-group mt-2">
+                <label for="memo">공부 기록/과목:</label>
+                <input type="text" name="memo" id="memo" class="form-control" maxlength="200" placeholder="공부 내용을 간단히 적어주세요.">
+            </div>
+            <div class="form-group mt-2">
+                <label for="felt_minutes">체감 시간(분):</label>
+                <input type="number" name="felt_minutes" id="felt_minutes" class="form-control" min="0" placeholder="예: 30">
+            </div>
+            <button type="submit" name="action" value="stop" class="btn btn-danger mt-2">타이머 종료</button>
+        </form>
+        <script>
+            const startTime = new Date("{{ running_log.start_time.astimezone().isoformat() }}");
+            function updateElapsed() {
+                const now = new Date();
+                let diff = Math.floor((now - startTime) / 1000);
+                if (diff < 0) diff = 0;
+                const min = String(Math.floor(diff / 60)).padStart(2, '0');
+                const sec = String(diff % 60).padStart(2, '0');
+                document.getElementById('elapsed').textContent = `${min}:${sec}`;
+            }
+            updateElapsed();
+            setInterval(updateElapsed, 1000);
+        </script>
+    {% else %}
+        <form method="post">
+            <button type="submit" name="action" value="start" class="btn btn-success">타이머 시작</button>
+        </form>
+    {% endif %}
+    <hr>
+    <p>오늘 누적 공부 시간: <strong>{{ today_minutes }}</strong> 분</p>
+    <form method="post" class="mt-2">
+        <button type="submit" name="action" value="apply" class="btn btn-primary">오늘 공부시간 티어/점수 반영</button>
+    </form>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="alert alert-info mt-3">
+          {% for message in messages %}
+            {{ message|replace('\n', '<br>')|safe }}
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+<hr>
+<h4>오늘의 공부 기록</h4>
+<ul class="list-group">
+    {% for log in today_logs %}
+        <li class="list-group-item">
+            <strong>
+                {{ log.start_time.astimezone().strftime('%H:%M') }}
+                ~
+                {{ log.end_time.astimezone().strftime('%H:%M') if log.end_time else '진행중' }}
+            </strong>
+            ({{ ((log.end_time - log.start_time).total_seconds() // 60)|int if log.end_time else 0 }}분)
+            {% if log.felt_minutes is not none %}
+                <br>체감시간: {{ log.felt_minutes }}분
+            {% endif %}
+            {% if log.memo %}
+                <br>과목: {{ log.memo }}
+            {% endif %}
+        </li>
+    {% else %}
+        <li class="list-group-item">오늘 기록 없음</li>
+    {% endfor %}
+</ul>
+    <hr>
+    <p>내 티어: <strong>{{ current_user.tier }}</strong></p>
+    <p>내 점수: <strong>{{ current_user.score }}</strong></p>
+</div>
+</body>
+</html>

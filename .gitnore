@@ -1,0 +1,61 @@
+# Python 가상환경 관련
+venv/
+env/
+.env/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+bin/# Python 가상환경 관련
+venv/
+env/
+.env/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+bin/
+lib/
+include/
+share/
+pyvenv.cfg
+
+# Python 캐시 파일
+__pycache__/
+*.py[cod]
+*$py.class
+
+# macOS 임시 파일
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+lib/
+include/
+share/
+pyvenv.cfg
+
+# Python 캐시 파일
+__pycache__/
+*.py[cod]
+*$py.class
+
+# macOS 임시 파일
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent

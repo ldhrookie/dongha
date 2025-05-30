@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>공부 시간 입력</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-4">
+    <h2>공부 시간 입력</h2>
+    <form method="post">
+        <div class="form-group">
+            <label>오늘 공부 시간(분):</label>
+            <input type="number" name="study_time" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">제출</button>
+    </form>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="alert alert-info mt-3">
+          {% for message in messages %}
+            {{ message }}
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    <hr>
+    <p>내 티어: <strong>{{ current_user.tier }}</strong></p>
+    <p>내 점수: <strong>{{ current_user.score }}</strong></p>
+</div>
+</body>
+</html>

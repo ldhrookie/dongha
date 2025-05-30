@@ -2,7 +2,6 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>공부 로그 분석</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
@@ -10,6 +9,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="/">공부 로그 분석</a>
+<<<<<<< HEAD
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
@@ -117,10 +117,28 @@
                 <p>데이터가 없습니다.</p>
             {% endif %}
         </div>
+=======
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="btn btn-outline-primary btn-sm mr-2" href="{{ url_for('auth.login') }}">로그인</a>
+            </li>
+            <li class="nav-item">
+                <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('auth.signup') }}">회원가입</a>
+            </li>
+            <li class="nav-item">
+                <a class="btn btn-outline-info btn-sm" href="{{ url_for('main.heatmap') }}">히트맵</a>
+            </li>
+        </ul>
+    </nav>
+    <div class="container">
+        <h1 class="mt-5">공부 로그 분석</h1>
+        {% if current_user.is_authenticated %}
+            <div class="alert alert-info mt-3">
+                <strong>{{ current_user.username }}</strong>님의 티어: <strong>{{ current_user.tier }}</strong> / 점수: <strong>{{ current_user.score }}</strong>
+            </div>
+            <a href="{{ url_for('main.study') }}" class="btn btn-success">오늘 공부 타이머</a>
+        {% endif %}
+>>>>>>> 3d83fe7 (모든 변경사항 푸쉬4)
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
