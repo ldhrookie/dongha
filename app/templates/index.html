@@ -4,27 +4,75 @@
     <meta charset="UTF-8">
     <title>공부 로그 분석</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="/">공부 로그 분석</a>
-<<<<<<< HEAD
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/summary">요약</a>
+                    <a class="nav-link" href="{{ url_for('main.index') }}">홈</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/heatmap">히트맵</a>
+                    <a class="nav-link" href="{{ url_for('main.heatmap') }}">히트맵</a>
                 </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <span class="navbar-text mr-2">{{ current_user.username }} ({{ current_user.tier }}, {{ current_user.score }}점)</span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-success btn-sm mr-2" href="{{ url_for('main.study') }}">공부 타이머</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-danger btn-sm" href="{{ url_for('auth.logout') }}">로그아웃</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="btn btn-outline-primary btn-sm mr-2" href="{{ url_for('auth.login') }}">로그인</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('auth.signup') }}">회원가입</a>
+                    </li>
+                {% endif %}
             </ul>
         </div>
     </nav>
-    <div class="container">
-        <h1 class="mt-5">공부 로그 분석</h1>
-        <p class="lead">여기에서 당신의 공부 로그를 분석하고 피드백을 받을 수 있습니다.</p>
-        
+    <div class="container mt-4">
+        <h1 class="mt-4 mb-3">공부 로그 분석</h1>
+        {% if current_user.is_authenticated %}
+            <div class="alert alert-info">
+                <strong>{{ current_user.username }}</strong>님의 티어: <strong>{{ current_user.tier }}</strong> / 점수: <strong>{{ current_user.score }}</strong>
+            </div>
+            {% set tier_img = {
+                '루키': 'rookie.png',
+                '브론즈1': 'bronze1.png',
+                '브론즈2': 'bronze2.png',
+                '브론즈3': 'bronze3.png',
+                '실버1': 'silver1.png',
+                '실버2': 'silver2.png',
+                '실버3': 'silver3.png',
+                '골드1': 'gold1.png',
+                '골드2': 'gold2.png',
+                '골드3': 'gold3.png',
+                '다이아1': 'diamond1.png',
+                '다이아2': 'diamond2.png',
+                '다이아3': 'diamond3.png',
+                '크리스탈1': 'crystal1.png',
+                '크리스탈2': 'crystal2.png',
+                '크리스탈3': 'crystal3.png',
+                '레전드1': 'legend1.png',
+                '레전드2': 'legend2.png',
+                '레전드3': 'legend3.png',
+                '얼티밋': 'ultimate.png'
+            } %}
+<div>
+    <img src="{{ url_for('static', filename='tier/' ~ tier_img.get(current_user.tier, 'rookie.png')) }}"
+         alt="티어 이미지" style="height:60px;">
+</div>
+        {% endif %}
+
         <h2 class="mt-4">과목별 총 공부 시간</h2>
         <div id="subject-summary">
             {% if subject_summary %}
@@ -117,28 +165,6 @@
                 <p>데이터가 없습니다.</p>
             {% endif %}
         </div>
-=======
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <a class="btn btn-outline-primary btn-sm mr-2" href="{{ url_for('auth.login') }}">로그인</a>
-            </li>
-            <li class="nav-item">
-                <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('auth.signup') }}">회원가입</a>
-            </li>
-            <li class="nav-item">
-                <a class="btn btn-outline-info btn-sm" href="{{ url_for('main.heatmap') }}">히트맵</a>
-            </li>
-        </ul>
-    </nav>
-    <div class="container">
-        <h1 class="mt-5">공부 로그 분석</h1>
-        {% if current_user.is_authenticated %}
-            <div class="alert alert-info mt-3">
-                <strong>{{ current_user.username }}</strong>님의 티어: <strong>{{ current_user.tier }}</strong> / 점수: <strong>{{ current_user.score }}</strong>
-            </div>
-            <a href="{{ url_for('main.study') }}" class="btn btn-success">오늘 공부 타이머</a>
-        {% endif %}
->>>>>>> 3d83fe7 (모든 변경사항 푸쉬4)
     </div>
 </body>
 </html>

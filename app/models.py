@@ -19,3 +19,4 @@ class StudyLog(db.Model):
     user = db.relationship('User', backref=db.backref('study_logs', lazy=True))
     felt_minutes = db.Column(db.Integer)  # 체감시간(분)
     memo = db.Column(db.String(200))
+    concentrate_rate = db.Column(db.Integer)  # 집중도(0~100)

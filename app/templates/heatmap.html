@@ -2,101 +2,45 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< HEAD
-    <title>요일별 과목별 공부량 히트맵</title>
+    <title>최근 7일 공부시간 히트맵</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/">공부 로그 분석</a>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/summary">요약</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/heatmap">히트맵</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-    <div class="container mt-4">
-        <h1 class="mt-5">요일별 과목별 공부량 히트맵</h1>
-        <div id="heatmap">
-            {% if heatmap_data %}
-                <table class="table table-bordered bg-white">
-                    <thead class="thead-light">
-                        <tr>
-                            <th>과목</th>
-                            {% set days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] %}
-                            {% for day in days %}
-                                <th>{{ day }}</th>
-                            {% endfor %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for row in heatmap_data %}
-                        <tr>
-                            <td>{{ row.subject }}</td>
-                            {% for value in row['values'] %}
-                                <td>{{ value|round(2) }}</td>
-                            {% endfor %}
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                <p>데이터가 없습니다.</p>
-            {% endif %}
-        </div>
-    </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-=======
-    <title>Study Log Heatmap</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div class="container">
-        <a href="{{ url_for('main.index') }}" class="btn btn-secondary mt-3 mb-3">홈으로</a>
-        <h1>최근 7일 공부시간 히트맵</h1>
-        <canvas id="heatmapCanvas"></canvas>
-    </div>
-    <script>
-        const heatmapData = {{ heatmap_data | tojson }};
-        const ctx = document.getElementById('heatmapCanvas').getContext('2d');
-        const labels = heatmapData.map(row => row.date);
-        const data = {
+<div class="container mt-4">
+    <a href="{{ url_for('main.index') }}" class="btn btn-secondary mb-3">홈으로</a>
+    <h2>최근 7일 공부시간 그래프</h2>
+    <canvas id="heatmapChart" height="100"></canvas>
+</div>
+<script>
+    const heatmapData = {{ heatmap_data|tojson }};
+    const labels = heatmapData.map(row => row.date);
+    const data = heatmapData.map(row => row.minutes);
+
+    new Chart(document.getElementById('heatmapChart'), {
+        type: 'bar',
+        data: {
             labels: labels,
             datasets: [{
                 label: '공부 시간(분)',
-                data: heatmapData.map(row => row.minutes),
-                backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                borderColor: 'rgba(75, 192, 192, 1)',
+                data: data,
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1
             }]
-        };
-        const config = {
-            type: 'bar',
-            data: data,
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: '공부 시간(분)'
-                        }
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: '공부 시간(분)'
                     }
                 }
             }
-        };
-        const heatmapChart = new Chart(ctx, config);
-    </script>
->>>>>>> 3d83fe7 (모든 변경사항 푸쉬4)
+        }
+    });
+</script>
 </body>
 </html>
